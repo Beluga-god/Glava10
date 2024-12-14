@@ -1,0 +1,4 @@
+apple -> elephant
+race -> egg
+apple -> elephant
+elephant -> tiger
