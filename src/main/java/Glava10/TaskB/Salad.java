@@ -1,4 +1,4 @@
-package org.example.TaskB;
+package Glava10.TaskB;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,34 +11,41 @@ public class Salad implements Serializable {
 
     private List<Vegetable> ingredients;
 
-    public Salad() {
+    public Salad()
+    {
         this.ingredients = new ArrayList<>();
     }
 
-    public void addIngredient(Vegetable vegetable) {
+    public void addIngredient(Vegetable vegetable)
+    {
         ingredients.add(vegetable);
     }
 
-    public double getTotalCalories() {
+    public double getTotalCalories()
+    {
         return ingredients.stream().mapToDouble(Vegetable::getCalories).sum();
     }
 
-    public void sortIngredientsByWeight() {
+    public void sortIngredientsByWeight()
+    {
         ingredients.sort(Comparator.comparingDouble(Vegetable::getWeight));
     }
 
-    public List<Vegetable> findVegetablesByCaloriesRange(double minCalories, double maxCalories) {
+    public List<Vegetable> findVegetablesByCaloriesRange(double minCalories, double maxCalories)
+    {
         return ingredients.stream()
                 .filter(veg -> veg.getCalories() >= minCalories && veg.getCalories() <= maxCalories)
                 .collect(Collectors.toList());
     }
 
-    public List<Vegetable> getIngredients() {
+    public List<Vegetable> getIngredients()
+    {
         return ingredients;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Ингредиенты салата: " + ingredients;
     }
 }

@@ -1,9 +1,6 @@
-package org.example.TaskB;
+package Glava10.TaskB;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 
 public abstract class Vegetable implements Serializable {
@@ -13,26 +10,31 @@ public abstract class Vegetable implements Serializable {
     private double weight;
     private double caloriesPer100g;
 
-    public Vegetable(String name, double weight, double caloriesPer100g) {
+    public Vegetable(String name, double weight, double caloriesPer100g)
+    {
         this.name = name;
         this.weight = weight;
         this.caloriesPer100g = caloriesPer100g;
     }
 
-    public double getCalories() {
+    public double getCalories()
+    {
         return (caloriesPer100g / 100) * weight;
     }
 
-    public double getWeight() {
+    public double getWeight()
+    {
         return weight;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vegetable vegetable = (Vegetable) o;
@@ -42,12 +44,14 @@ public abstract class Vegetable implements Serializable {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(name, weight, caloriesPer100g);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name + " (" + weight + "г, " + getCalories() + " ккал)";
     }
 }

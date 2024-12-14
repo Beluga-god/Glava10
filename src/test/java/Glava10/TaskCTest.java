@@ -1,4 +1,4 @@
-package org.example;
+package Glava10;
 
 import org.junit.jupiter.api.*;
 

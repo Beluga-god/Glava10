@@ -1,4 +1,4 @@
-package org.example.TaskB;
+package Glava10.TaskB;
 
 public class Cucumber extends Vegetable {
     public Cucumber(double weight) {

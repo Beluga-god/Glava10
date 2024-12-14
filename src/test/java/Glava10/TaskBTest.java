@@ -1,6 +1,6 @@
-package org.example;
+package Glava10;
 
-import org.example.TaskB.*;
+import Glava10.TaskB.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +17,9 @@ public class TaskBTest {
     @BeforeEach
     public void setUp() {
         salad = new Salad();
-        salad.addIngredient(new Carrot(130));
+        salad.addIngredient(new Carrot(100));
         salad.addIngredient(new Tomat(150));
-        salad.addIngredient(new Cucumber(180));
+        salad.addIngredient(new Cucumber(220));
     }
 
     @Test
@@ -29,7 +29,7 @@ public class TaskBTest {
 
     @Test
     public void testTotalCalories() {
-        double expectedCalories = 109.1;  // 41 * 130 / 100 + 18 * 150 / 100 + 16 * 180 / 100;
+        double expectedCalories = 103.0;  // 20 * 150 / 15 * 220/ 40 * 100/
         assertEquals(expectedCalories, salad.getTotalCalories(), 0.1, "Общая калорийность салата вычислена неправильно");
     }
 

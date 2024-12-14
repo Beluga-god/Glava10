@@ -1,4 +1,4 @@
-package org.example.TaskB;
+package Glava10.TaskB;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public class Main {
         // Добавление овощей в салат
         salad.addIngredient(new Carrot(100));
         salad.addIngredient(new Tomat(150));
-        salad.addIngredient(new Cucumber(200));
+        salad.addIngredient(new Cucumber(220));
 
         // Подсчет калорийности
         System.out.println("Общая калорийность салата: " + salad.getTotalCalories() + " ккал");

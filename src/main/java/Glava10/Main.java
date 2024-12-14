@@ -1,6 +1,8 @@
-package org.example;
+package Glava10;
 
-import org.example.TaskB.*;
+import Glava10.TaskA.*;
+import Glava10.TaskC.*;
+import Glava10.TaskB.*;
 
 import java.io.IOException;
 import java.io.File;
@@ -42,9 +44,7 @@ public class Main {
             System.out.println("Ошибка при работе с файлами: " + e.getMessage());
         }
 
-
-        // vol10.solutionС
-
+        //TaskC
         File inputFile = new File("input.java");
 
         // Создаем новую директорию
