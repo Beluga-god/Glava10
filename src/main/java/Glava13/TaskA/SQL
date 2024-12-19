@@ -1,0 +1,14 @@
+CREATE TABLE persons (
+    id SERIAL PRIMARY KEY,
+	full_name VARCHAR(255) NOT NULL,
+	birth_date DATE NOT NULL
+);
+
+CREATE TABLE letters (
+	id SERIAL PRIMARY KEY,
+	sender_id INT REFERENCES persons(id),
+	receiver_id INT REFERENCES persons(id),
+	subject VARCHAR(255),
+	body TEXT,
+	sent_date DATE
+);
