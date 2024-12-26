@@ -7,12 +7,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Server {
     private static final int SERVER_PORT = 6000; // Порт сервера
+    private static final String CLIENTS_FILE = "clients.txt"; // Файл для хранения списка клиентов
     private static final List<ClientHandler> connectedClients = new CopyOnWriteArrayList<>(); // Список клиентов
+    private static int clientIdCounter = 0; // Счётчик для генерации уникальных ID
     public static volatile boolean isRunning = true;
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
             System.out.println("Сервер запущен на порту " + SERVER_PORT);
+            loadClientsFromFile();
 
             // Поток для отправки сообщений клиентам
             Thread messageSenderThread = new Thread(() -> {
@@ -70,13 +73,34 @@ public class Server {
         }
     }
 
+    private static void loadClientsFromFile() {
+        File file = new File(CLIENTS_FILE);
+        if (file.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Считывание ID и информации о клиенте из файла
+                    String[] parts = line.split(":");
+                    if (parts.length == 3) {
+                        String clientId = parts[0].trim();
+                        String clientInfo = parts[1] + ":" + parts[2];
+                        System.out.println("Загружен клиент: ID " + clientId + ", " + clientInfo);
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("Ошибка при загрузке данных из файла: " + e.getMessage());
+            }
+        }
+    }
+
     private static void waitClient(ServerSocket serverSocket) throws IOException {
         while (isRunning) {
             Socket clientSocket = serverSocket.accept();
-            ClientHandler clientHandler = new ClientHandler(clientSocket);
+            ClientHandler clientHandler = new ClientHandler(clientSocket, clientIdCounter++);
             connectedClients.add(clientHandler);
+            saveClientsToFile(); // После подключения клиента сохраняем список
             new Thread(clientHandler).start();
-            System.out.println("Новый клиент подключен: " + clientHandler.getClientInfo());
+            System.out.println("Новый клиент подключен: ID " + clientHandler.getClientId() + " " + clientHandler.getClientInfo());
         }
     }
 
@@ -114,6 +138,17 @@ public class Server {
         }
     }
 
+    private static void saveClientsToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CLIENTS_FILE))) {
+            for (ClientHandler clientHandler : connectedClients) {
+                writer.write(clientHandler.getClientId() + ": " + clientHandler.getClientInfo());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Ошибка при сохранении клиентов в файл: " + e.getMessage());
+        }
+    }
+
     // Остановка всех потоков
     public static void shutdown() {
         isRunning = false;
@@ -130,17 +165,17 @@ public class Server {
     private static class ClientHandler implements Runnable {
         private final Socket socket;
         private final BufferedWriter writer;
+        private final int clientId;
 
-        ClientHandler(Socket socket) throws IOException {
+        ClientHandler(Socket socket, int clientId) throws IOException {
             this.socket = socket;
             this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            this.clientId = clientId;
         }
 
         @Override
         public void run() {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
-
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                 String message;
                 while ((message = reader.readLine()) != null) {
                     System.out.println("Сообщение от " + getClientInfo() + ": " + message);
@@ -156,6 +191,7 @@ public class Server {
                 try {
                     socket.close();
                     connectedClients.remove(this);
+                    saveClientsToFile(); // После отключения клиента обновляем файл
                     System.out.println("Клиент удален: " + getClientInfo());
                 } catch (IOException e) {
                     System.err.println("Ошибка при закрытии соединения с клиентом: " + e.getMessage());
@@ -177,6 +213,10 @@ public class Server {
 
         public String getClientInfo() {
             return socket.getInetAddress() + ":" + socket.getPort();
+        }
+
+        public int getClientId() {
+            return clientId;
         }
     }
 }
